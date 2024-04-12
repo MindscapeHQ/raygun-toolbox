@@ -1,7 +1,7 @@
 {
     "name": "@raygun/webpack-plugin",
     "version": "0.1.0",
-    "description": "",
+    "description": "A plugin for automating uploading your source maps to raygun",
     "main": "dist/cjs/raygun-webpack-plugin.js",
     "module": "dist/esm/raygun-webpack-plugin.js",
     "types": "dist/esm/raygun-webpack-plugin.d.ts",
