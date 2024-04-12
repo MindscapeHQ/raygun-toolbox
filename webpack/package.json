@@ -1,0 +1,29 @@
+{
+    "name": "@raygun/webpack-plugin",
+    "version": "0.1.0",
+    "description": "",
+    "main": "dist/cjs/raygun-webpack-plugin.js",
+    "module": "dist/esm/raygun-webpack-plugin.js",
+    "types": "dist/esm/raygun-webpack-plugin.d.ts",
+    "scripts": {
+        "clean": "node src/utils/clean.js",
+        "build:cjs": "npm run tsc -p tsconfig.cjs.json",
+        "build:esm": "npm run tsc -p tsconfig.esm.json",
+        "prebuild": "npm run clean",
+        "build": "npm run build:cjs && npm run build:esm"
+    },
+    "keywords": [
+        "webpack",
+        "raygun"
+    ],
+    "author": "hamish-taylor",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/webpack": "^5.28.5",
+        "typescript": "^5.4.3"
+    },
+    "dependencies": {},
+    "engines": {
+        "node": ">= 16"
+    }
+}
