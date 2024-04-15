@@ -19,11 +19,20 @@ export class RaygunWebpackPlugin {
             Object.keys(compilation.assets).forEach(async (filepath) => {
                 if (filepath.endsWith('.map')) {
                     const sourceMapContent = compilation.assets[filepath].source();
-                    try {
-                        await this.uploadSourceMap(filepath, typeof sourceMapContent === 'string' ? sourceMapContent : sourceMapContent.toString());
-                        console.log(`Successfully uploaded ${filepath} to Raygun.`);
-                    } catch (error) {
-                        console.error(`Error uploading ${filepath}: ${error}`);
+                    if (!!sourceMapContent) {
+
+                        const uploadOperation = async () => {
+                            await this.uploadSourceMap(filepath, typeof sourceMapContent === 'string' ? sourceMapContent : sourceMapContent.toString());
+                            console.log(`Successfully uploaded ${filepath} to Raygun.`);
+                        };
+
+                        try {
+                            await this.retryOperation(uploadOperation, 3, 10);
+                        } catch (error) {
+                            console.error(`Error uploading ${filepath}: ${error}`);
+                        }
+                    } else {
+                        console.error(`No source map content found for ${filepath}`);
                     }
                 }
             });
@@ -40,30 +49,22 @@ export class RaygunWebpackPlugin {
             const cleanedUrl = resolvedUrl.replace(/\.map$/, '');
             const filename = this.getFileNameFromPath(filePath);
 
-
             const boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW';
             const delimiter = `\r\n--${boundary}\r\n`;
             const closeDelimiter = `\r\n--${boundary}--`;
             let postData = '';
 
-            // Add the sourceMap file part
-            postData += delimiter;
-            postData += `Content-Disposition: form-data; name="file"; filename="${filename}"\r\n`;
+            postData += delimiter + `Content-Disposition: form-data; name="file"; filename="${filename}"\r\n`;
             postData += 'Content-Type: application/json\r\n\r\n';
             postData += sourceMapContent;
-
-            // Add the URI part
-            postData += delimiter;
-            postData += `Content-Disposition: form-data; name="uri"\r\n\r\n`;
+            postData += delimiter + `Content-Disposition: form-data; name="uri"\r\n\r\n`;
             postData += cleanedUrl;
-
             postData += closeDelimiter;
 
             const requestOptions = {
                 hostname: 'api.raygun.com',
-                port: 7272,
                 path: `/v3/applications/${applicationId}/source-maps`,
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': `multipart/form-data; boundary=${boundary}`,
                     'Authorization': `Bearer ${patToken}`,
@@ -75,29 +76,53 @@ export class RaygunWebpackPlugin {
                 let body = '';
                 res.on('data', (chunk) => body += chunk);
                 res.on('end', () => {
+                    // Ensure statusCode is defined and check the range
                     if (typeof res.statusCode === 'number' && res.statusCode >= 200 && res.statusCode < 300) {
                         resolve();
                     } else {
-                        const errorMessage = `Failed to upload source map: HTTP status code ${res.statusCode}`;
-                        console.error(errorMessage); // Print the error message if non-2xx response
+                        const errorMessage = `Failed to upload source map: HTTP status code ${res.statusCode || 'undefined'}`;
+                        console.error(errorMessage);
                         reject(new Error(errorMessage));
                     }
                 });
             });
+
             req.on('error', (error) => {
-                reject(error);
                 console.error(`Request error: ${error}`);
+                reject(error);
             });
 
             req.write(postData);
             req.end();
         });
     }
+
     private getFileNameFromPath(filePath: string) {
         // Normalize the path to use a consistent separator
         const normalizedPath = filePath.replace(/\\/g, '/');
         // Split the path by the directory separator and get the last element
         const parts = normalizedPath.split('/');
         return parts.pop(); // Extracts and returns the last segment (the file name)
+    }
+
+    private delay(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Function to attempt an operation with retries and exponential backoff
+    private async retryOperation<T>(operation: () => Promise<T>, retries: number, delayLength: number): Promise<boolean> {
+        try {
+            await operation();
+            return true;
+        } catch (error) {
+            if (retries > 0) {
+                console.error(`Attempt failed, retrying... (${retries} retries left)`);
+                await this.delay(delayLength);
+                return this.retryOperation(operation, retries - 1, delayLength * 2);
+            } else {
+                console.error(`All retry attempts failed: ${error}`);
+                return false;
+            }
+        }
     }
 }
