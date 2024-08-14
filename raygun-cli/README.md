@@ -2,21 +2,40 @@
 
 Command-line tool for Raygun.com.
 
-### Usage
+### Install
 
-Install in your system:
+You can install this tool in different ways.
+
+At the moment, a Dart SDK setup is necessary.
+You can get the Dart SDK here: https://dart.dev/get-dart or as part of your Flutter SDK installation.
+
+Note: `$HOME/.pub-cache/bin` must be in your path.
+
+In the future, this tool will also be available as standalone binary file in other distribution channels.
+
+**Install binary**
+
+_Not available yet!_
+
+**Install from pub.dev**
+
+```
+dart pub global activate raygun_cli 
+```
+
+**Install from sources**
 
 ```
 dart pub global activate -s path .
 ```
 
-Then use:
+### Usage
+
+Call to `raygun-cli` with a command and arguments.
 
 ```
 raygun-cli <command> <arguments>
 ```
-
-Note: `$HOME/.pub-cache/bin` must be in your path.
 
 Or use directly from sources:
 
@@ -26,35 +45,30 @@ dart bin/raygun_cli.dart <command> <arguments>
 
 #### Sourcemap Uploader
 
-Upload sourcemaps to Raygun
+Upload sourcemaps to Raygun.
 
 ```
-Usage: raygun-cli sourcemap --uri=<uri> --app-id=<app-id> --token=<token>
-
--h, --help                  Print sourcemap usage information.
-    --app-id (mandatory)    Raygun's application ID
-    --token (mandatory)     Raygun's access token
--p, --platform              Specify project platform. Supported: [flutter, node]
-                            (defaults to "flutter")
--m, --input-map             Input sourcemap file
-    --uri                   Application URI (e.g. https://localhost:3000/main.dart.js)
-    --base-uri              Base application URI (e.g. https://localhost:3000/)
+raygun-cli sourcemap <arguments>
 ```
 
-For example, from your Flutter project folder:
+##### Flutter Sourcemaps
+
+To upload Flutter web sourcemaps to Raygun.com, navigate to your project root and run the following command:
 
 ```
 raygun-cli sourcemap --uri=https://example.com/main.dart.js --app-id=APP_ID --token=TOKEN
 ```
 
-## TODO
+- `uri` is the full URI where your project will be installed to.
+- `app-id` the Application ID in Raygun.com.
+- `token` is an access token from https://app.raygun.com/user/tokens.
 
-- [ ] Generate and distribute binaries
-- [ ] Upload to pub.dev
-- [ ] Support more platforms (node and other JS projects)
-- [ ] Add more useful commands
-- [ ] Support config files (e.g. `.raygun.conf` to read values like `uri` and `app-id`)
-- [ ] Tests
+`raygun-cli` will try to find the `main.dart.js.map` file in `build/web/main.dart.js.map`.
+You can also specify a different path with the `input-map` argument.
+
+##### NodeJS Sourcemaps
+
+_Not available yet!_
 
 ## Development
 
