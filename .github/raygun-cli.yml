@@ -3,8 +3,10 @@ name: Dart
 on:
   push:
     branches: [ "main" ]
+    paths: ['raygun-cli/**']
   pull_request:
     branches: [ "main" ]
+    paths: ['raygun-cli/**']
 
 jobs:
   build:
