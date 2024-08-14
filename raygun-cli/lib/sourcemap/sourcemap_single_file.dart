@@ -3,27 +3,33 @@ import 'dart:io';
 import 'package:raygun_cli/sourcemap/sourcemap_api.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_base.dart';
 
-class SourcemapFlutter extends SourcemapBase {
-  SourcemapFlutter({
+class SourcemapSingleFile extends SourcemapBase {
+  SourcemapSingleFile({
     required super.command,
     required super.verbose,
   });
 
   @override
   Future<void> upload() async {
-    if (command.option('uri') == null && command.option('base-uri') == null) {
-      print('Provide either "uri" or "base-uri"');
+    if (!command.wasParsed('uri')) {
+      print('Missing "uri"');
       exit(2);
     }
-    final uri =
-        command.option('uri') ?? '${command.option('base-uri')}main.dart.js';
-    final path = command.option('input-map') ?? 'build/web/main.dart.js.map';
+    final uri = command.option('uri')!;
+
+    if (!command.wasParsed('input-map')) {
+      print('Missing "input-map"');
+      exit(2);
+    }
+    final path = command.option('input-map')!;
+
     if (verbose) {
       print('app-id: $appId');
       print('token: $token');
       print('input-map: $path');
       print('uri: $uri');
     }
+
     final out = await uploadSourcemap(
       appId: appId,
       token: token,

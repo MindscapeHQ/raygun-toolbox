@@ -1,3 +1,3 @@
-## 1.0.0
+## 0.0.1
 
-- Initial version.
+- Adds the `sourcemap` command to upload JavaScript sourcemaps to Raygun.com

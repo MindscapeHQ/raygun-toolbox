@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:raygun_cli/sourcemap/flutter/sourcemap_flutter.dart';
 import 'package:raygun_cli/sourcemap/node/sourcemap_node.dart';
+import 'package:raygun_cli/sourcemap/sourcemap_single_file.dart';
 
 const kSourcemapCommand = 'sourcemap';
 
@@ -28,7 +29,6 @@ ArgParser buildParserSourcemap() {
       'platform',
       abbr: 'p',
       help: 'Specify project platform. Supported: [flutter, node]',
-      defaultsTo: 'flutter',
     )
     ..addOption(
       'uri',
@@ -52,17 +52,24 @@ ArgParser buildParserSourcemap() {
 
 void parseSourcemapCommand(ArgResults command, bool verbose) {
   if (command.wasParsed('help')) {
-    print(
-        'Usage: raygun-cli sourcemap --uri=<uri> --app-id=<app-id> --token=<token>');
+    print('Usage: raygun-cli sourcemap <arguments>');
     print(buildParserSourcemap().usage);
     exit(0);
   }
-  if (command.option('platform') == 'flutter') {
-    sourcemapFlutter(command, verbose);
-  } else if (command.option('platform') == 'node') {
-    sourcemapNode(command, verbose);
-  } else {
-    print('Unsupported platform.');
-    exit(1);
+  if (!command.wasParsed('app-id') || !command.wasParsed('token')) {
+    print('Missing mandatory arguments');
+    print(buildParserSourcemap().usage);
+    exit(2);
+  }
+  switch (command.option('platform')) {
+    case null:
+      SourcemapSingleFile(command: command, verbose: verbose).upload();
+    case 'flutter':
+      SourcemapFlutter(command: command, verbose: verbose).upload();
+    case 'node':
+      SourcemapNode(command: command, verbose: verbose).upload();
+    default:
+      print('Unsupported platform');
+      exit(1);
   }
 }

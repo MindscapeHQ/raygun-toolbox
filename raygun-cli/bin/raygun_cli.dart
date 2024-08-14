@@ -39,9 +39,7 @@ void main(List<String> arguments) {
     final ArgResults results = argParser.parse(arguments);
     bool verbose = false;
 
-    // Process the parsed arguments.
-    if (results.wasParsed('help') ||
-        (results.options.isEmpty && results.command == null)) {
+    if (results.wasParsed('help') || arguments.isEmpty) {
       printUsage(argParser);
       return;
     }
