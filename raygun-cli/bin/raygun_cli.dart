@@ -1,5 +1,6 @@
 import 'package:args/args.dart';
 import 'package:raygun_cli/sourcemap/sourcemap_command.dart';
+import 'package:raygun_cli/symbols/flutter_symbols.dart';
 
 const String version = '0.0.1';
 
@@ -25,6 +26,10 @@ ArgParser buildParser() {
     ..addCommand(
       kSourcemapCommand,
       buildParserSourcemap(),
+    )
+    ..addCommand(
+      kSymbolsCommand,
+      buildParserSymbols(),
     );
 }
 
@@ -53,6 +58,11 @@ void main(List<String> arguments) {
 
     if (results.command?.name == kSourcemapCommand) {
       parseSourcemapCommand(results.command!, verbose);
+      return;
+    }
+
+    if (results.command?.name == kSymbolsCommand) {
+      parseSymbolsCommand(results.command!, verbose);
       return;
     }
 

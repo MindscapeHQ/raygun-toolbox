@@ -43,6 +43,11 @@ Or use directly from sources:
 dart bin/raygun_cli.dart <command> <arguments>
 ```
 
+**Common mandatory arguments**
+
+- `app-id` the Application ID in Raygun.com.
+- `token` is an access token from https://app.raygun.com/user/tokens.
+
 #### Sourcemap Uploader
 
 Upload sourcemaps to [raygun.com](https://raygun.com).
@@ -54,8 +59,6 @@ raygun-cli sourcemap <arguments>
 Where the arguments are:
 
 - `uri` is the full URI where your project will be installed to.
-- `app-id` the Application ID in Raygun.com.
-- `token` is an access token from https://app.raygun.com/user/tokens.
 - `input-map` is the map file to upload.
 
 ```
@@ -78,6 +81,66 @@ raygun-cli sourcemap -p flutter --uri=https://example.com/main.dart.js --app-id=
 ##### NodeJS Sourcemaps
 
 _Not available yet!_
+
+#### Flutter obfuscation symbols
+
+Manages obfuscation symbols to [raygun.com](https://raygun.com).
+
+```
+raygun-cli symbols <subcommand> <arguments>
+```
+
+**Subcommands**
+
+- `upload`: Upload a symbols file.
+- `list`: List uploaded symbols files.
+- `delete`: Delete an uploaded symbols file.
+
+**Upload subcommand**
+
+Upload a symbols file.
+
+Provide the path to the symbols file (e.g. `app.android-arm64.symbols`), as well as the application version (e.g. `1.0.0`).
+
+```
+raygun-cli symbols upload --path=<path to symbols file> --version=<app version> --app-id=APP_ID --token=TOKEN
+```
+
+**List subcommand**
+
+List the uploaded symbols file.
+
+```
+raygun-cli symbols list --app-id=APP_ID --token=TOKEN
+```
+
+Example output:
+
+```
+List of symbols:
+
+Symbols File: app.android-arm64.symbols
+Identifier: 2c7a3u3
+App Version: 0.0.1
+
+Symbols File: app.android-x64.symbols
+Identifier: 2c7a3u4
+App Version: 0.0.1
+
+Symbols File: app.android-arm.symbols
+Identifier: 2c7a7k6
+App Version: 0.0.1
+```
+
+**Delete subcommand**
+
+Delete an uploaded symbols file.
+
+Provide the identifier (`id`) of the symbols file (e.g. `--id=2c7a3u3`). You can obtain the identifier with the `list` subcommand.
+
+```
+raygun-cli symbols delete --id=<id> --app-id=APP_ID --token=TOKEN
+```
 
 ## Development
 
