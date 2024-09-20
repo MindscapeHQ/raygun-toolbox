@@ -136,7 +136,7 @@ App Version: 0.0.1
 
 Delete an uploaded symbols file.
 
-Provide the id of the symbols file (e.g. `abcd1234`). You can obtain the id with the `list` subcommand.
+Provide the identifier (`id`) of the symbols file (e.g. `--id=2c7a3u3`). You can obtain the identifier with the `list` subcommand.
 
 ```
 raygun-cli symbols delete --id=<id> --app-id=APP_ID --token=TOKEN
