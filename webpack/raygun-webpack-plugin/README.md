@@ -82,4 +82,4 @@ npm run build
 ```
 
 # Support
-For support with the Raygun Webpack Plugin, please open an issue in our GitHub repository.
+For support with the Raygun Webpack Plugin, please open an issue in our GitHub repository or reach out via our [support form](https://raygun.com/about/contact).
