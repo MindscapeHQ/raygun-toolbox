@@ -13,7 +13,7 @@ interface RaygunWebpackPluginOptions {
         maxDelay?: number;          // Maximum delay in ms between retries (default: 30000)
         backoffFactor?: number;     // Multiplier for exponential backoff (default: 2)
     };
-    delayBetweenFiles?: number;    // Optional: Add delay between file uploads if you're hitting rate limits
+    delayBetweenFiles?: number;    // Add delay between file uploads if you're hitting rate limits
 }
 
 export class RaygunWebpackPlugin {
