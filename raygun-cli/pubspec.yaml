@@ -1,6 +1,6 @@
 name: raygun_cli
 description: Command-line tool for Raygun.com
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/MindscapeHQ/raygun-toolbox/
 homepage: https://raygun.com
 
