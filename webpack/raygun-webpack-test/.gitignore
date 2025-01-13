@@ -1,0 +1,4 @@
+src/*.js
+src/*.css
+dist/
+node_modules/
