@@ -9,7 +9,7 @@ on:
     paths: ['raygun-cli/**']
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,4 +34,47 @@ jobs:
 
       - name: Run tests
         run: dart test
+
+      - name: Build Linux binary
+        run: dart compile exe bin/raygun.dart -o raygun
+
+  build-macos:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: raygun-cli
+    steps:
+      - uses: actions/checkout@v4
+
+      # Note: This workflow uses the latest stable version of the Dart SDK.
+      # You can specify other versions if desired, see documentation here:
+      # https://github.com/dart-lang/setup-dart/blob/main/README.md
+      # - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build MacOS binary
+        run: dart compile exe bin/raygun.dart -o raygun
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: raygun-cli
+    steps:
+      - uses: actions/checkout@v4
+
+      # Note: This workflow uses the latest stable version of the Dart SDK.
+      # You can specify other versions if desired, see documentation here:
+      # https://github.com/dart-lang/setup-dart/blob/main/README.md
+      # - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build Windows binary
+        run: dart compile exe bin/raygun.dart -o raygun.exe
 
