@@ -37,8 +37,8 @@ export class RaygunWebpackPlugin {
     }
 
     public apply(compiler: Compiler): void {
-        compiler.hooks.emit.tapAsync('RaygunWebpackPlugin', (compilation, callback) => {
-            Object.keys(compilation.assets).forEach(async (filepath) => {
+        compiler.hooks.emit.tapAsync('RaygunWebpackPlugin', async (compilation, callback) => {
+            for (const filepath of Object.keys(compilation.assets)) {
                 if (filepath.endsWith('.map')) {
                     const sourceMapContent = compilation.assets[filepath].source();
                     if (!!sourceMapContent) {
@@ -64,7 +64,7 @@ export class RaygunWebpackPlugin {
                         console.error(`No source map content found for ${filepath}`);
                     }
                 }
-            });
+            }
 
             callback();
         });
@@ -112,7 +112,7 @@ export class RaygunWebpackPlugin {
                 });
             });
 
-            req.on('error', (error) => {
+            req.on('error', (error: Error) => {
                 reject(error);
             });
 
