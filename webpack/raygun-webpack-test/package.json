@@ -1,0 +1,29 @@
+{
+  "name": "raygun-webpack-test",
+  "version": "1.0.0",
+  "description": "Test project for Raygun Webpack Plugin",
+  "main": "index.js",
+  "scripts": {
+    "generate": "bun generate-entries.js",
+    "build": "webpack --config webpack.config.js",
+    "test": "bun run generate && bun run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.7",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
+    "css-minimizer-webpack-plugin": "^5.0.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "terser-webpack-plugin": "^5.3.10",
+    "@raygun.io/webpack-plugin": "link:@raygun.io/webpack-plugin",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "path-browserify": "^1.0.1"
+  }
+}

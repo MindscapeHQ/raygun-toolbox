@@ -1,0 +1,2 @@
+1. Add your Raygun credentials to `webpack.config.js` and run `npm install` to install the dependencies.
+2. Run `npm run generate` to generate the entry points and `npm run build` to build the project.
