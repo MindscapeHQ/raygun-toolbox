@@ -112,7 +112,7 @@ export class RaygunWebpackPlugin {
                 });
             });
 
-            req.on('error', (error: Error) => {
+            req.on('error', (error) => {
                 reject(error);
             });
 
